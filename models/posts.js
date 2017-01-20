@@ -1,6 +1,26 @@
 var Post = require('../lib/mongo').Post;
+var ComentModel = require('./comments');
 var marked = require('marked');
-
+//给post 添加留言数 commentsCount
+Post.plugin('addCommentsCount',{
+	afterFind:function(posts){
+		return Promise.all(posts.map(function(post){
+			return ComentModel.getCommentsCount(post._id).then(function(commentsCount){
+				post.commentsCount = commentsCount;
+				return post;
+			});
+		}));
+	},
+	afterFindOne:function(post){
+		if(post){
+			return ComentModel.getCommentsCount(post._id).then(function(count){
+				post.commentsCount = count;
+				return post;
+			});
+		}
+		return post;
+	}
+});
 //将Post的content从markdowm 转换成 html
 Post.plugin('contentToHtml',{
 	afterFind:function(posts){
@@ -28,6 +48,7 @@ module.exports = {
 			.populate({path:'author',model:'User'})
 			.addCreatedAt()
 			.contentToHtml()
+			.addCommentsCount()
 			.exec();
 	},
 	//按创建时间降序获取所有用户文章或者某个特定用户的所有文章
@@ -42,6 +63,7 @@ module.exports = {
 			.sort({_id:-1})
 			.addCreatedAt()
 			.contentToHtml()
+			.addCommentsCount()
 			.exec();
 	},
 
