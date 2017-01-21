@@ -87,6 +87,13 @@ module.exports = {
 	},
 	//通过用户id和文章id删除一篇文章
 	delPostById:function(postId,author){
-		return Post.remove({author:author,_id:postId}).exec();
+		return Post.remove({author:author,_id:postId})
+				.exec()
+				.then(function(res){
+					//文章删除后，再删除该文章下的所有留言
+					if(res.result.ok&&res.result.n>0){
+						return ComentModel.delCommentsByPostId(postId);
+					}
+				});
 	}
 };
