@@ -89,7 +89,6 @@ router.get('/:postId/edit', checkLogin, function(req, res, next) {
   var author = req.session.user._id;
   PostModel.getRawPostById(postId)
 	.then(function(post){
-		console.log(post);
 		if(!post){
 			throw new Error('该文章不存在');
 		}
