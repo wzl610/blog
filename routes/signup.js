@@ -22,8 +22,9 @@ router.post('/', (req, res, next) => {
             });
             let userPromise = userEntity.save();
             userPromise.then((err) => {
-                res.render('index');
-            })
+                req.session.user = username;
+                res.redirect('/');
+            });
         }
     })
 });

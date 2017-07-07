@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 
 var router = require('./routes/router.js');
 
@@ -20,6 +21,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  name: 'myblog',// 设置 cookie 中保存 session id 的字段名称
+  secret: 'myblog',// 通过设置 secret 来计算 hash 值并放在 cookie 中，使产生的 signedCookie 防篡改
+  cookie: {
+    maxAge: 2592000000// 过期时间，过期后 cookie 中的 session id 自动删除
+  }
+}));
 
 //创建路由
 router(app);
