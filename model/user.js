@@ -8,7 +8,8 @@ let userSchema = moogoose.Schema({
     sex: {
         type: String,
         enum: ['man', 'woman']
-    }
+    },
+    intro: String
 });
 
 let User = moogoose.model('User', userSchema);

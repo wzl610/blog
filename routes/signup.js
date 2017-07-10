@@ -11,19 +11,24 @@ router.post('/', (req, res, next) => {
     let username = req.body.username;
     userModel.findOne({'name': username},'name',(err, user) => {
         if (user) {
-            console.log('账号已存在，请登录!')
-            res.render('signin');
+            alert('账号已存在，请登录!')
+            res.redirect('/signin');
         } else {
             //保存
-            let userEntity = new userModel({
+            let userObj = {
                 name: username,
                 password: sha1(req.body.password),
-                sex: req.body.sex
-            });
+                sex: req.body.sex,
+                intro: req.body.intro
+            };
+            let userEntity = new userModel(userObj);
             let userPromise = userEntity.save();
             userPromise.then((err) => {
-                req.session.user = username;
+                delete userObj.password;
+                req.session.user = userObj;
                 res.redirect('/');
+            }).catch((err) => {
+                console.log(err);
             });
         }
     })
