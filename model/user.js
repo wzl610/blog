@@ -1,5 +1,6 @@
-let moogoose = require('../config/mongo');
-let userSchema = moogoose.Schema({
+let mongoose = require('../config/mongo');
+let Schema = mongoose.Schema;
+let userSchema = new Schema({
     name: {
         type: String,
         unique: true
@@ -12,5 +13,5 @@ let userSchema = moogoose.Schema({
     intro: String
 });
 
-let User = moogoose.model('User', userSchema);
+let User = mongoose.model('User', userSchema);
 module.exports = User;

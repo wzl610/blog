@@ -20,7 +20,6 @@ router.post('/', function(req, res, next) {
             console.log('密码错误!');
             return;
         }
-        delete user.password;
         req.session.user = user;
         console.log('登录成功!');
         res.redirect('/');

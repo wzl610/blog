@@ -1,0 +1,21 @@
+<%- include('header'); %>
+
+<div>
+    <form action="/post" method="post">
+        <label>
+            标题:
+            <input type="text" name="title"/>
+        </label>
+        <label>
+            标签(以,隔开):
+            <input type="text" name="tag"/>
+        </label>
+        <label>
+            文章内容:
+            <textarea rows="10" cols="15" name="content"></textarea>
+        </label>
+        <input type="submit" value="提交"/>
+    </form>
+</div>
+
+<%- include('footer'); %>
