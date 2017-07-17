@@ -13,5 +13,4 @@ let userSchema = new Schema({
     intro: String
 });
 
-let User = mongoose.model('User', userSchema);
-module.exports = User;
+module.exports = mongoose.model('User', userSchema);

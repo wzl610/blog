@@ -1,11 +1,19 @@
 let mongoose = require('../config/mongo');
 let Schema = mongoose.Schema;
 let tagSchema = new Schema({
-    name: String,
-    author: {
+    name: String
+});
+
+let tagPostSchema = new Schema({
+    tid: {
         type: Schema.ObjectId,
-        ref: 'User'
+        ref: 'Tag'
+    },
+    pid: {
+        type: Schema.ObjectId,
+        ref: 'Post'
     }
 });
-let Tag = mongoose.model('Tag', tagSchema);
-module.exports = Tag;
+
+module.exports.tagModel = mongoose.model('Tag', tagSchema);
+module.exports.tagPostModel = mongoose.model('TagPost', tagPostSchema);
