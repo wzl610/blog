@@ -3,5 +3,16 @@
 <div>
     <a href="/post">发表文章</a>
 </div>
+<div>
+    <% pages.forEach(function(page){ %> 
+        <div>
+            <h5><%= page.title %></h5>
+            <div><%- page.content%></div>
+            <a href="/post/<%= page._id %>/edit">编辑</a>
+            <a href="/post/<%= page._id %>/remove">删除</a>
+            创作于: <%= new Date(page.date).toLocaleDateString() %>
+        </div>
+    <% }) %>
+</div>
 
 <%- include('footer'); %>

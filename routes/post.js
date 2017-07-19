@@ -236,7 +236,24 @@ router.post('/', function _callee5(req, res, next) {
                     return _context5.stop();
             }
         }
-    }, null, this, [[5, 10]]);
+    }, null, undefined, [[5, 10]]);
+});
+
+router.get('/:postId/edit', function (req, res, next) {
+    var postId = req.params.postId;
+});
+
+router.get('/:postId/remove', function (req, res, next) {
+    var postId = req.params.postId;
+    postModel.findOne({ _id: postId }, function (err, postDoc) {
+        postDoc.remove({ _id: postId }, function (err) {
+            if (err) {
+                console.log('err');
+            } else {
+                res.redirect('/');
+            }
+        });
+    });
 });
 
 module.exports = router;

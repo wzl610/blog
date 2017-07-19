@@ -8,4 +8,12 @@ let postSchema = new Schema({
     },
     content: String
 });
+postSchema.pre('remove', function(next) {
+    var post = this;
+    post.model('TagPost').update(
+        { pid: post._id }, 
+        { $unset: { pid: 1 } }, 
+        { multi: true },
+        next);
+});
 module.exports = mongoose.model('Post', postSchema);

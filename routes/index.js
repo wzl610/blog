@@ -1,13 +1,11 @@
-var express = require('express');
-var router = express.Router();
-
+let express = require('express');
+let router = express.Router();
+let postModel = require('../model/post');
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  if (!req.session.user) {
-    res.redirect('/signin')
-  }
-  console.log(Date.now());
-  res.render('index', { title: 'Express' });
+  postModel.find((err, pages) => {
+    res.render('index', { pages: pages });
+  })
 });
 
 module.exports = router;

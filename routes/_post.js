@@ -63,11 +63,11 @@ let createTagPost = async (tagId, postId) => {
         })
     })
 }
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     res.render('post');
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', async (req, res, next) => {
     if (!req.session.user) {
         res.redirect('/');
     }
@@ -80,5 +80,22 @@ router.post('/', async function(req, res, next) {
     }
     res.redirect('/');
 });
+
+router.get('/:postId/edit', (req, res, next) => {
+    var postId = req.params.postId;
+});
+
+router.get('/:postId/remove', (req, res, next) => {
+    var postId = req.params.postId;
+    postModel.findOne({_id: postId}, (err, postDoc) => {
+        postDoc.remove({_id: postId}, (err) => {
+            if (err) {
+                console.log('err');
+            } else {
+                res.redirect('/');
+            }
+        })
+    })
+})
 
 module.exports = router;
