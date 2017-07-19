@@ -1,0 +1,25 @@
+<%- include('header'); %>
+
+<div>
+    <a href="/">返回首页</a>
+</div>
+<div>
+    <h5><%= post.title %></h5>
+    <div><%- post.content%></div>
+    <a href="/post/<%= post._id %>/edit">编辑</a>
+    <a href="/post/<%= post._id %>/remove">删除</a>
+    创作于: <%= new Date(post.date).toLocaleDateString() %>   
+</div>
+<div>
+    <form action="/post/<%= post._id %>/comment" method="post">
+        <label>评论:
+            <textarea rows="10" cols="10" name="comment"></textarea>
+        </label>
+        <label>用户名:
+            <input type="input" name="name" />
+        </label>
+        <input type="submit" value="提交评论"/>
+    </form>
+</div>
+
+<%- include('footer'); %>

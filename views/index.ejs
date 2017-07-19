@@ -4,13 +4,13 @@
     <a href="/post">发表文章</a>
 </div>
 <div>
-    <% pages.forEach(function(page){ %> 
+    <% posts.forEach(function(post){ %> 
         <div>
-            <h5><%= page.title %></h5>
-            <div><%- page.content%></div>
-            <a href="/post/<%= page._id %>/edit">编辑</a>
-            <a href="/post/<%= page._id %>/remove">删除</a>
-            创作于: <%= new Date(page.date).toLocaleDateString() %>
+            <a href="/post/<%= post._id %>"><%= post.title %></a>
+            <div><%- post.content%></div>
+            <a href="/post/<%= post._id %>/edit">编辑</a>
+            <a href="/post/<%= post._id %>/remove">删除</a>
+            创作于: <%= new Date(post.date).toLocaleDateString() %>
         </div>
     <% }) %>
 </div>

@@ -4,11 +4,11 @@ let postModel = require('../model/post');
 let markdown = require('markdown').markdown;
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  postModel.find((err, pages) => {
-    pages.forEach(function(page) {
-      page.content = markdown.toHTML(page.content);
+  postModel.find((err, posts) => {
+    posts.forEach(function(post) {
+      post.content = markdown.toHTML(post.content);
     }, this);
-    res.render('index', { pages: pages });
+    res.render('index', { posts: posts});
   })
 });
 

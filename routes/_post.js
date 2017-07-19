@@ -2,8 +2,10 @@ require("babel-core/register");
 require("babel-polyfill");
 let postModel = require('../model/post');
 let {tagModel, tagPostModel} = require('../model/tag');
+let commentModel = require('../model/comment');
 let express = require('express');
 let router = express.Router();
+let markdown = require('markdown').markdown;
 let bindTagPost = async (tags, postId) => {
     if (!tags) {
         tags = ['default'];
@@ -66,6 +68,14 @@ router.get('/', (req, res, next) => {
     res.render('post');
 });
 
+router.get('/:postId', (req, res, next) => {
+    var postId = req.params.postId;
+    postModel.findOne({_id: postId}, (err, post) => {
+        post.content = markdown.toHTML(post.content);
+        res.render('article', {post: post});
+    })
+});
+
 router.post('/', async (req, res, next) => {
     if (!req.session.user) {
         res.redirect('/');
@@ -100,7 +110,7 @@ router.post('/:postId/edit', (req, res, next) => {
             console.log('更新失败:' + err);
         }
     })
-})
+});
 
 router.get('/:postId/remove', (req, res, next) => {
     var postId = req.params.postId;
@@ -113,6 +123,22 @@ router.get('/:postId/remove', (req, res, next) => {
             }
         })
     })
-})
+});
+
+router.post('/:postId/comment', (req, res, next) => {
+    var postId = req.params.postId;
+    var commentDoc = {
+        comment: req.body.comment,
+        author: req.body.name,
+        article: postId
+    };
+    commentModel.create(commentDoc, (err, comment) => {
+        if(!err) {
+            res.redirect(`/post/${postId}`);
+        } else {
+            console.log('添加失败:' + err);
+        }
+    })
+});
 
 module.exports = router;

@@ -10,8 +10,10 @@ var _require = require('../model/tag'),
     tagModel = _require.tagModel,
     tagPostModel = _require.tagPostModel;
 
+var commentModel = require('../model/comment');
 var express = require('express');
 var router = express.Router();
+var markdown = require('markdown').markdown;
 var bindTagPost = function _callee(tags, postId) {
     var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _step$value, key, elem, tagId;
 
@@ -198,6 +200,14 @@ router.get('/', function (req, res, next) {
     res.render('post');
 });
 
+router.get('/:postId', function (req, res, next) {
+    var postId = req.params.postId;
+    postModel.findOne({ _id: postId }, function (err, post) {
+        post.content = markdown.toHTML(post.content);
+        res.render('article', { post: post });
+    });
+});
+
 router.post('/', function _callee5(req, res, next) {
     var tags, postId;
     return regeneratorRuntime.async(function _callee5$(_context5) {
@@ -270,6 +280,22 @@ router.get('/:postId/remove', function (req, res, next) {
                 res.redirect('/');
             }
         });
+    });
+});
+
+router.post('/:postId/comment', function (req, res, next) {
+    var postId = req.params.postId;
+    var commentDoc = {
+        comment: req.body.comment,
+        author: req.body.name,
+        article: postId
+    };
+    commentModel.create(commentDoc, function (err, comment) {
+        if (!err) {
+            res.redirect("/post/" + postId);
+        } else {
+            console.log('添加失败:' + err);
+        }
     });
 });
 
