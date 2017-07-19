@@ -12,7 +12,6 @@ var _require = require('../model/tag'),
 
 var express = require('express');
 var router = express.Router();
-var markdown = require('markdown').markdown;
 var bindTagPost = function _callee(tags, postId) {
     var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _step$value, key, elem, tagId;
 
@@ -102,7 +101,7 @@ var createPost = function _callee2(req) {
                 case 0:
                     postObj = {
                         title: req.body.title,
-                        content: markdown.toHTML(req.body.content)
+                        content: req.body.content
                     };
                     _context2.next = 3;
                     return regeneratorRuntime.awrap(new Promise(function (resolve, reject) {
@@ -241,6 +240,24 @@ router.post('/', function _callee5(req, res, next) {
 
 router.get('/:postId/edit', function (req, res, next) {
     var postId = req.params.postId;
+    postModel.findOne({ _id: postId }, function (err, post) {
+        res.render('edit', { post: post });
+    });
+});
+
+router.post('/:postId/edit', function (req, res, next) {
+    var postId = req.params.postId;
+    var post = {
+        title: req.body.title,
+        content: req.body.content
+    };
+    postModel.update({ _id: postId }, post, function (err) {
+        if (!err) {
+            res.redirect('/');
+        } else {
+            console.log('更新失败:' + err);
+        }
+    });
 });
 
 router.get('/:postId/remove', function (req, res, next) {

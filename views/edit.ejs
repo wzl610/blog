@@ -1,0 +1,17 @@
+<%- include('header'); %>
+
+<div>
+    <form action="/post/<%= post._id %>/edit" method="post">
+        <label>
+            标题:
+            <input type="text" name="title" value="<%= post.title %>"/>
+        </label>
+        <label>
+            文章内容:
+            <textarea rows="10" cols="15" name="content"><%= post.content %></textarea>
+        </label>
+        <input type="submit" value="提交"/>
+    </form>
+</div>
+
+<%- include('footer'); %>

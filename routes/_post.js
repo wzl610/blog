@@ -4,7 +4,6 @@ let postModel = require('../model/post');
 let {tagModel, tagPostModel} = require('../model/tag');
 let express = require('express');
 let router = express.Router();
-let markdown = require('markdown').markdown;
 let bindTagPost = async (tags, postId) => {
     if (!tags) {
         tags = ['default'];
@@ -21,7 +20,7 @@ let bindTagPost = async (tags, postId) => {
 let createPost = async (req) => {
     let postObj = {
         title: req.body.title,
-        content: markdown.toHTML(req.body.content)
+        content: req.body.content
     }
     return await new Promise((resolve, reject) => {
         postModel.create(postObj, (err, post) => {
@@ -83,7 +82,25 @@ router.post('/', async (req, res, next) => {
 
 router.get('/:postId/edit', (req, res, next) => {
     var postId = req.params.postId;
+    postModel.findOne({_id: postId}, (err, post) => {
+        res.render('edit', {post: post});
+    })
 });
+
+router.post('/:postId/edit', (req, res, next) => {
+    var postId = req.params.postId;
+    var post = {
+        title: req.body.title,
+        content: req.body.content
+    }
+    postModel.update({_id: postId}, post, (err) => {
+        if(!err) {
+            res.redirect('/');
+        } else {
+            console.log('更新失败:' + err);
+        }
+    })
+})
 
 router.get('/:postId/remove', (req, res, next) => {
     var postId = req.params.postId;
