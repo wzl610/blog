@@ -21,5 +21,15 @@
         <input type="submit" value="提交评论"/>
     </form>
 </div>
+<div>
+    <h1>评论区:</h1>
+    <% comments.forEach(function(comment) { %>
+        <div>
+            <p><%= comment.comment%></p>
+            <p>来自<%= comment.author %></p>
+            <p>时间: <%= new Date(comment.time).toLocaleDateString() %> </p>
+        </div>
+    <% }) %>
+</div>
 
 <%- include('footer'); %>

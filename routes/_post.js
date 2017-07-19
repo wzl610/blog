@@ -68,12 +68,20 @@ router.get('/', (req, res, next) => {
     res.render('post');
 });
 
-router.get('/:postId', (req, res, next) => {
+router.get('/:postId', async (req, res, next) => {
     var postId = req.params.postId;
-    postModel.findOne({_id: postId}, (err, post) => {
-        post.content = markdown.toHTML(post.content);
-        res.render('article', {post: post});
-    })
+    let post = await postModel.findOne({_id: postId}, (err, post) => {
+        if (err) {
+            console.log('获取出错');
+        }
+    });
+    post.content = markdown.toHTML(post.content);
+    let comments = await commentModel.find({article: postId}, (err, comments) => {
+        if(err) {
+            console.log('获取出错');
+        }
+    });
+    res.render('article', {post: post, comments: comments});
 });
 
 router.post('/', async (req, res, next) => {

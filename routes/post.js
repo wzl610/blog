@@ -200,49 +200,79 @@ router.get('/', function (req, res, next) {
     res.render('post');
 });
 
-router.get('/:postId', function (req, res, next) {
-    var postId = req.params.postId;
-    postModel.findOne({ _id: postId }, function (err, post) {
-        post.content = markdown.toHTML(post.content);
-        res.render('article', { post: post });
-    });
-});
-
-router.post('/', function _callee5(req, res, next) {
-    var tags, postId;
+router.get('/:postId', function _callee5(req, res, next) {
+    var postId, post, comments;
     return regeneratorRuntime.async(function _callee5$(_context5) {
         while (1) {
             switch (_context5.prev = _context5.next) {
+                case 0:
+                    postId = req.params.postId;
+                    _context5.next = 3;
+                    return regeneratorRuntime.awrap(postModel.findOne({ _id: postId }, function (err, post) {
+                        if (err) {
+                            console.log('获取出错');
+                        }
+                    }));
+
+                case 3:
+                    post = _context5.sent;
+
+                    post.content = markdown.toHTML(post.content);
+                    _context5.next = 7;
+                    return regeneratorRuntime.awrap(commentModel.find({ article: postId }, function (err, comments) {
+                        if (err) {
+                            console.log('获取出错');
+                        }
+                    }));
+
+                case 7:
+                    comments = _context5.sent;
+
+                    res.render('article', { post: post, comments: comments });
+
+                case 9:
+                case "end":
+                    return _context5.stop();
+            }
+        }
+    }, null, undefined);
+});
+
+router.post('/', function _callee6(req, res, next) {
+    var tags, postId;
+    return regeneratorRuntime.async(function _callee6$(_context6) {
+        while (1) {
+            switch (_context6.prev = _context6.next) {
                 case 0:
                     if (!req.session.user) {
                         res.redirect('/');
                     }
                     tags = req.body.tag;
-                    _context5.next = 4;
+                    _context6.next = 4;
                     return regeneratorRuntime.awrap(createPost(req));
 
                 case 4:
-                    postId = _context5.sent;
-                    _context5.prev = 5;
-                    _context5.next = 8;
+                    postId = _context6.sent;
+                    _context6.prev = 5;
+                    _context6.next = 8;
                     return regeneratorRuntime.awrap(bindTagPost(tags, postId));
 
                 case 8:
-                    _context5.next = 13;
+                    _context6.next = 13;
                     break;
 
                 case 10:
-                    _context5.prev = 10;
-                    _context5.t0 = _context5["catch"](5);
+                    _context6.prev = 10;
+                    _context6.t0 = _context6["catch"](5);
 
-                    console.log(_context5.t0);
+                    console.log(_context6.t0);
 
                 case 13:
                     res.redirect('/');
 
                 case 14:
                 case "end":
-                    return _context5.stop();
+                    return _context6.stop();
             }
         }
     }, null, undefined, [[5, 10]]);
